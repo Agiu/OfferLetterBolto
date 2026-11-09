@@ -1,3 +1,4 @@
+import { browserApi } from './browserStore';
 import type {
   Candidate,
   LetterStyle,
@@ -40,7 +41,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   return (response.status === 204 ? undefined : await response.json()) as T;
 }
 
-export const api = {
+const serverApi = {
   listTemplates: () => request<OfferTemplate[]>('GET', '/templates'),
   listLetterStyles: () => request<LetterStyleOption[]>('GET', '/letter-styles'),
   listCandidates: () => request<Candidate[]>('GET', '/candidates'),
@@ -50,3 +51,11 @@ export const api = {
     request<Offer>('PATCH', `/offers/${encodeURIComponent(id)}`, patch),
   deleteOffer: (id: string) => request<void>('DELETE', `/offers/${encodeURIComponent(id)}`),
 };
+
+/**
+ * Hosted builds are plain static files with no server, so offers are kept in the browser
+ * (see browserStore.ts). Locally, `npm run dev` uses the SQLite database behind /api; set
+ * VITE_BROWSER_STORAGE=true to try the browser version there.
+ */
+export const api: typeof serverApi =
+  import.meta.env.PROD || import.meta.env.VITE_BROWSER_STORAGE === 'true' ? browserApi : serverApi;
