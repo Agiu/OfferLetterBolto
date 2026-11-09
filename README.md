@@ -1,1 +1,1 @@
-# Bolto - Offer Letter Product
+# Bolto - Offer Letter Prototype
