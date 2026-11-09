@@ -1,0 +1,135 @@
+.timeline {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.step {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: max-content;
+}
+
+.step:last-child {
+  flex: none;
+}
+
+/* Connector line between steps. */
+.step:not(:last-child)::after {
+  content: '';
+  flex: 1;
+  min-width: var(--space-3);
+  height: var(--border-width);
+  margin-inline: var(--space-2);
+  background: var(--color-outline-2);
+}
+
+.done:not(:last-child)::after {
+  background: var(--color-primary-idle);
+}
+
+.target {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+}
+
+button.target {
+  cursor: pointer;
+}
+
+button.target:hover .label {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+}
+
+.marker {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: var(--border-width) solid var(--color-outline-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-background);
+  color: var(--color-text-secondary);
+}
+
+.current .marker,
+.done .marker {
+  border-color: var(--color-primary-idle);
+  background: var(--color-primary-idle);
+  color: var(--color-text-on-primary);
+}
+
+.label {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.current .label {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/*
+ * On the Bolto-blue band (Figma 2043:320): no connectors, white labels, 30px markers.
+ * White on primary/idle is 4.73:1. The current step's marker is filled white.
+ */
+.onPrimary {
+  gap: calc(var(--space-6) + 1px);
+}
+
+.onPrimary .step {
+  flex: none;
+}
+
+.onPrimary .step::after {
+  display: none;
+}
+
+.onPrimary .target {
+  gap: calc(var(--space-2) + 2px);
+}
+
+.onPrimary .marker {
+  width: 30px;
+  height: 30px;
+  border-color: var(--color-outline-1);
+  background: transparent;
+  color: var(--color-text-on-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.onPrimary .current .marker {
+  border-color: var(--color-background);
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+/* Finished steps: white outline, as in Figma 2045:214. */
+.onPrimary .done .marker {
+  border-color: var(--color-background);
+}
+
+.onPrimary .label,
+.onPrimary .current .label {
+  font-size: var(--typography-paragraph4-font-size);
+  line-height: var(--typography-paragraph4-line-height);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-on-primary);
+}
+
+.onPrimary button.target:hover .label {
+  color: var(--color-text-on-primary);
+}

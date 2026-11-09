@@ -1,0 +1,96 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.groupTitle {
+  composes: label from '../../styles/typography.module.css';
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+/* Tinted circle; the icon itself stays text-primary so it keeps contrast on the tint. */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-primary);
+}
+
+.kept .icon {
+  background: var(--color-info-success-background);
+}
+
+.replaced .icon {
+  background: var(--color-surface-4);
+}
+
+.cleared .icon {
+  background: var(--color-info-warning-background);
+}
+
+.dropped .icon {
+  background: var(--color-surface-1);
+}
+
+.note {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  color: var(--color-text-secondary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border: var(--border-width) solid var(--color-outline-1);
+  border-radius: var(--radius-sm);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(110px, 2fr) 5fr;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+}
+
+.row + .row {
+  border-top: var(--border-width) solid var(--color-outline-1);
+}
+
+.label {
+  color: var(--color-text-secondary);
+}
+
+.value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  color: var(--color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+/* The old value, struck through: what won't be on the new letter. */
+.before {
+  text-decoration: line-through;
+  color: var(--color-text-secondary);
+}
+
+.arrow {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

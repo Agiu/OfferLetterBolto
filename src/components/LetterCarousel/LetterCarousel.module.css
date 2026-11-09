@@ -1,0 +1,320 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/*
+ * Figma 2043:299: the middle letter is the largest; one letter sits either side, smaller and
+ * quieter, ~44px apart. The stage bleeds to the window edges so the side letters aren't cut by
+ * the content column; the page clips horizontal overflow, so 100vw never adds a sideways scroll.
+ */
+.stage {
+  --slide-w: min(400px, 100vw - 2 * var(--layout-gutter) - 2 * var(--space-8));
+  --slide-h: clamp(340px, 46vh, 440px);
+  --side-scale: 0.74;
+  /* Space between letters, before scaling the side ones down. */
+  --slide-gap: calc(var(--space-8) + var(--space-4));
+  /* Visible space between the middle letter and a side letter, once the side one is scaled down. */
+  --side-gap: calc(var(--slide-gap) + var(--slide-w) * (1 - var(--side-scale)) / 2);
+  position: relative;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  /* Air above and below the letters (the side ones are smaller, so this shows most beside them). */
+  padding-block: var(--space-6);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+/* The track is as wide as the stage, so 100% here is the stage width. Slides butt up; scaling
+   the side letters opens the gap between them. */
+.track {
+  display: flex;
+  gap: var(--slide-gap);
+  align-items: center;
+  height: var(--slide-h);
+  transform: translateX(calc((100% - var(--slide-w)) / 2 - var(--index) * (var(--slide-w) + var(--slide-gap))));
+  transition: transform 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.slide {
+  position: relative;
+  flex: 0 0 var(--slide-w);
+  height: 100%;
+  transition:
+    opacity 360ms ease,
+    transform 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.active {
+  opacity: 1;
+}
+
+.beside {
+  opacity: 0.55;
+  transform: scale(var(--side-scale));
+  cursor: pointer;
+}
+
+.beside:hover {
+  opacity: 0.8;
+}
+
+/* Only three letters show at once, as in the wireframe. */
+.away {
+  opacity: 0;
+  transform: scale(var(--side-scale));
+  pointer-events: none;
+}
+
+.sheet {
+  height: 100%;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-outline-1);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+}
+
+/* No scrollbar and no manual scrolling: the middle letter glides down and up by itself. */
+.active .sheet {
+  border-color: var(--color-outline-2);
+}
+
+.navButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--component-button-height);
+  height: var(--component-button-height);
+  padding: 0;
+  border: var(--border-width) solid var(--component-button-secondary-border);
+  border-radius: var(--radius-pill);
+  background: var(--component-button-secondary-background);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: border-color 120ms ease;
+}
+
+.navButton:hover:not(:disabled) {
+  border-color: var(--color-text-secondary);
+}
+
+.navButton:disabled {
+  border-color: var(--color-outline-1);
+  color: var(--color-outline-2);
+  cursor: not-allowed;
+}
+
+/* Stop / play, floating over the lower corner of the middle letter. */
+.playButton {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: var(--border-width) solid var(--color-outline-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+  cursor: pointer;
+}
+
+.playButton:hover {
+  border-color: var(--color-text-secondary);
+}
+
+.playButton:focus-visible {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: 2px;
+}
+
+/* Wide screens: each arrow sits in the gap between the middle letter and a side letter. */
+.besidePrevious,
+.besideNext {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  translate: 0 -50%;
+}
+
+.besidePrevious {
+  right: calc(50% + var(--slide-w) / 2 + var(--side-gap) / 2 - var(--component-button-height) / 2);
+}
+
+.besideNext {
+  left: calc(50% + var(--slide-w) / 2 + var(--side-gap) / 2 - var(--component-button-height) / 2);
+}
+
+.withOptions {
+  display: none;
+}
+
+/* Option row: one pill per letter, left to right in carousel order. */
+.picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.options {
+  display: flex;
+  position: relative; /* offsetParent for scrolling the selected option into view */
+  gap: var(--space-2);
+  min-width: 0;
+  padding: 2px; /* room for the focus ring inside the scroll area */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.option {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  position: relative;
+  flex-shrink: 0;
+  padding: 6px var(--space-3);
+  border: var(--border-width) solid var(--component-radio-idle-border);
+  border-radius: var(--radius-pill);
+  background: var(--component-radio-idle-background);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.option:hover {
+  border-color: var(--color-outline-2);
+  color: var(--color-text-primary);
+}
+
+.selected,
+.selected:hover {
+  border-color: var(--component-radio-selected-border);
+  background: var(--component-radio-selected-background);
+  color: var(--color-text-primary);
+}
+
+.option:has(.input:focus-visible) {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: 2px;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* On the Bolto-blue band: white outlined pills, the selected one filled white. */
+.onPrimary .option {
+  border-color: var(--color-primary-disabled);
+  background: transparent;
+  color: var(--color-text-on-primary);
+}
+
+.onPrimary .option:hover {
+  border-color: var(--color-text-on-primary);
+  color: var(--color-text-on-primary);
+}
+
+.onPrimary .selected,
+.onPrimary .selected:hover {
+  border-color: var(--color-text-on-primary);
+  background: var(--color-text-on-primary);
+  color: var(--color-primary-idle);
+}
+
+.onPrimary .option:has(.input:focus-visible) {
+  outline-color: var(--color-text-on-primary);
+}
+
+.onPrimary .navButton:focus-visible {
+  outline-color: var(--color-text-on-primary);
+}
+
+/*
+ * Narrow screens (Figma 2056:382): a 257 × 343 letter in the middle with the side letters peeking
+ * in at the window edges. The gaps are too small for the arrows, so they sit over the ends of the
+ * option row, which runs edge to edge and fades out under them.
+ */
+@media (max-width: 719px) {
+  .stage {
+    --slide-w: min(257px, 100vw - 136px);
+    --slide-h: 343px;
+    --side-scale: 0.85;
+    --slide-gap: var(--space-4);
+  }
+
+  .besidePrevious,
+  .besideNext {
+    display: none;
+  }
+
+  .picker {
+    position: relative;
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  /* Room at both ends so the first and last option can scroll clear of the arrows. */
+  .options {
+    flex: 1;
+    padding: 2px calc(var(--layout-gutter) + var(--space-8));
+  }
+
+  .withOptions {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    translate: 0 -50%;
+  }
+
+  /* On the page gutter, in line with the title, the letter's name and Continue. */
+  .withOptions:first-child {
+    left: var(--layout-gutter);
+  }
+
+  .withOptions:last-child {
+    right: var(--layout-gutter);
+  }
+
+  /* The row fades into the blue under each arrow. */
+  .onPrimary .picker::before,
+  .onPrimary .picker::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    z-index: 1;
+    width: calc(var(--space-8) * 2 + var(--space-4));
+    pointer-events: none;
+  }
+
+  .onPrimary .picker::before {
+    left: 0;
+    background: linear-gradient(to right, var(--color-primary-idle) 40%, transparent);
+  }
+
+  .onPrimary .picker::after {
+    right: 0;
+    background: linear-gradient(to left, var(--color-primary-idle) 40%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .slide {
+    transition: none;
+  }
+}

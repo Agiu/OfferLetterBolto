@@ -1,0 +1,496 @@
+/* =====================================================================
+ * Hero stage: the journey as a little app, four scenes in turn.
+ * Loaded after styles.css, so it overrides the older single-scene rules.
+ * ===================================================================== */
+
+.stage {
+  height: 640px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f1f2f4;
+  box-shadow: 0 40px 80px -50px rgba(23, 23, 23, 0.35);
+  isolation: isolate;
+}
+
+/* The blue: fills the stage for picking and reviewing, shrinks to the header for set-up. */
+.stage-blue {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 100%;
+  background: var(--blue);
+  transition: height 700ms cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 0;
+}
+
+.stage[data-at='setup'] .stage-blue {
+  height: 56px;
+}
+
+.app-head {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 56px;
+  padding: 0 20px;
+  color: var(--white);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.app-logo svg {
+  display: block;
+  width: 58px;
+  height: auto;
+}
+
+.app-steps {
+  display: flex;
+  gap: 18px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.app-steps li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.75;
+  transition: opacity 300ms ease;
+}
+
+.app-steps i {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font: 600 11px/1 var(--mono);
+  font-style: normal;
+  transition: background 300ms ease, color 300ms ease;
+}
+
+.app-steps li.current,
+.app-steps li.done {
+  opacity: 1;
+}
+
+.app-steps li.current i {
+  background: var(--white);
+  color: var(--blue);
+}
+
+.app-steps li.done i {
+  font-size: 0;
+}
+
+/* The design system's check (lucide, 12px, stroke 1.5 x 2), as in the app's timeline. */
+.app-steps li.done i::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.scenes {
+  position: absolute;
+  inset: 56px 0 0;
+  z-index: 1;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity 420ms ease, transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s 520ms;
+}
+
+.stage[data-at='template'] .scene-template,
+.stage[data-at='setup'] .scene-setup,
+.stage[data-at='review'] .scene-review,
+.stage[data-at='send'] .scene-review {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 260ms, 260ms, 0s;
+}
+
+/* ---------- 1. Pick template ---------- */
+
+.scene-template {
+  color: var(--white);
+}
+
+.tpl-title {
+  width: min(560px, 100% - 40px);
+  margin: 28px auto 0;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+.tpl-title u {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+.tpl-track {
+  --card-w: 220px;
+  --off: 250px;
+  position: relative;
+  height: 330px;
+  margin-top: 28px;
+}
+
+.tpl-card {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  width: var(--card-w);
+  height: 300px;
+  padding: 20px;
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 24px 40px -24px rgba(5, 20, 70, 0.6);
+  transition: transform 640ms cubic-bezier(0.65, 0, 0.35, 1), opacity 640ms ease;
+}
+
+.tpl-card p {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tpl-card i {
+  display: block;
+  height: 6px;
+  border-radius: 9px;
+  background: #ececec;
+}
+
+.tpl-card .w60 { width: 60%; }
+.tpl-card .w70 { width: 70%; }
+.tpl-card .w75 { width: 75%; }
+.tpl-card .w80 { width: 80%; }
+.tpl-card .w85 { width: 85%; }
+.tpl-card .w90 { width: 90%; }
+
+.tpl-card[data-pos='0'] { transform: translateX(-50%); z-index: 2; }
+.tpl-card[data-pos='-1'] { transform: translateX(calc(-50% - var(--off))) scale(0.84); opacity: 0.7; }
+.tpl-card[data-pos='1'] { transform: translateX(calc(-50% + var(--off))) scale(0.84); opacity: 0.7; }
+.tpl-card[data-pos='-2'] { transform: translateX(calc(-50% - var(--off) * 2)) scale(0.7); opacity: 0; }
+.tpl-card[data-pos='2'] { transform: translateX(calc(-50% + var(--off) * 2)) scale(0.7); opacity: 0; }
+
+.tpl-card[data-pos='2'],
+.tpl-card[data-pos='-2'] {
+  visibility: hidden;
+}
+
+.tpl-track.no-anim .tpl-card {
+  transition: none;
+}
+
+.tpl-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(520px, 100% - 32px);
+  padding: 12px 12px 12px 20px;
+  border-radius: 10px;
+  background: var(--blue-soft);
+  color: var(--ink);
+  font-size: 14px;
+  transform: translateX(-50%);
+}
+
+.tpl-panel b {
+  font-weight: 500;
+}
+
+.tpl-continue,
+.rv-send,
+.modal-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 14px;
+  white-space: nowrap;
+  transition: transform 140ms ease, filter 140ms ease;
+}
+
+.pressed {
+  transform: scale(0.94);
+  filter: brightness(0.9);
+}
+
+/* ---------- 2. Set up letter ---------- */
+
+.scene-setup {
+  overflow: hidden;
+}
+
+.setup-scroll {
+  padding: 24px 16px 0;
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.scene-setup .letter {
+  padding-bottom: 180px;
+}
+
+.scene-setup .bar {
+  left: 50%;
+  right: auto;
+  bottom: 20px;
+  width: min(680px, 100% - 32px);
+  transform: translateX(-50%);
+}
+
+/* ---------- 3. Review letter ---------- */
+
+.scene-review {
+  overflow: hidden;
+}
+
+.review-scroll {
+  display: grid;
+  gap: 16px;
+  width: min(600px, 100% - 32px);
+  margin: 24px auto 0;
+  transition: transform 2600ms cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+.rv-letter,
+.rv-note {
+  border-radius: 14px;
+  background: var(--white);
+}
+
+.rv-letter {
+  display: grid;
+  gap: 14px;
+  padding: 32px 36px;
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.rv-sign {
+  margin-top: 8px;
+}
+
+.rv-sign b {
+  font-weight: 500;
+}
+
+.rv-sign span {
+  color: var(--ink-2);
+}
+
+.rv-lines {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.rv-lines span {
+  padding-top: 6px;
+  border-top: 1px solid #cfcfcf;
+}
+
+.rv-note {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+}
+
+.rv-note-title {
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: -0.02em;
+  color: var(--blue);
+}
+
+.rv-note-field {
+  min-height: 64px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f1f1f0;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.rv-placeholder {
+  color: var(--ink-3);
+}
+
+.rv-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rv-back {
+  padding: 7px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* ---------- 4. Send ---------- */
+
+.modal-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(10, 20, 50, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 300ms ease, visibility 0s 300ms;
+}
+
+.stage[data-at='send'] .modal-wrap {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.modal {
+  display: grid;
+  gap: 14px;
+  width: min(380px, 100%);
+  padding: 0 0 20px;
+  border-radius: 14px;
+  background: var(--white);
+  overflow: hidden;
+  transform: translateY(12px) scale(0.97);
+  transition: transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.stage[data-at='send'] .modal {
+  transform: none;
+}
+
+.modal-title {
+  padding: 16px 20px;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.modal-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.modal-body[hidden],
+.modal-btn[hidden] {
+  display: none;
+}
+
+.modal-btn {
+  justify-self: end;
+  margin-right: 20px;
+}
+
+.spin {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--line);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .stage {
+    height: 600px;
+    border-radius: 0;
+  }
+
+  .app-head {
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .app-steps {
+    gap: 6px;
+    margin-right: 0;
+  }
+
+  /* Only the current step keeps its label on a phone. */
+  .app-steps li span {
+    display: none;
+  }
+
+  .app-steps li.current span {
+    display: inline;
+  }
+
+  .tpl-title {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .tpl-track {
+    --card-w: 170px;
+    --off: 150px;
+    height: 280px;
+  }
+
+  .tpl-card {
+    height: 250px;
+    padding: 16px;
+  }
+
+  .setup-scroll {
+    padding: 16px 0 0;
+  }
+
+  .scene-setup .bar {
+    width: calc(100% - 32px);
+  }
+
+  .rv-letter {
+    padding: 20px 18px;
+  }
+
+  .rv-lines {
+    grid-template-columns: 1fr;
+  }
+}

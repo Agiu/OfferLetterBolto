@@ -1,0 +1,174 @@
+/* Review letter (Figma 2050:421): the blue fills the whole screen; white cards sit on it. */
+.page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+/* The blue behind everything. Arriving from set-up it grows from the header band's height. */
+.blue {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-primary-idle);
+}
+
+.grow {
+  animation: grow 620ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes grow {
+  from {
+    clip-path: inset(0 0 calc(100% - var(--grow-from)) 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* The letter and cards rise into place once the blue has started to fill. */
+.arrive {
+  animation: arrive 560ms 260ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-8) * 2));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grow,
+  .arrive {
+    animation: none;
+  }
+}
+
+/*
+ * Three columns: the letter and the note in the middle, what was
+ * entered on the right. Narrower screens stack them: letter, what was entered, note.
+ */
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--layout-gutter) calc(var(--space-8) * 2);
+}
+
+.letterSection {
+  width: min(640px, 100%);
+  min-width: 0;
+}
+
+/* The finished letter on a white card. Two classes so it wins over the letter's own paper styles. */
+.letterSection .letter {
+  border-radius: var(--component-panel-radius);
+  padding: calc(var(--space-8) * 1.5) calc(var(--space-8) * 1.25) calc(var(--space-8) * 1.5);
+}
+
+/* ---------- Personal note and Send ---------- */
+
+.note {
+  width: min(640px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border-radius: var(--component-panel-radius);
+  background: var(--color-background);
+}
+
+/* 24px primary/idle on white is 4.7:1. */
+.noteTitle {
+  composes: heading6 from '../../styles/typography.module.css';
+  color: var(--color-primary-idle);
+}
+
+.noteField {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  width: 100%;
+  min-height: 88px;
+  font-family: inherit;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--component-field-idle-border);
+  border-radius: var(--component-field-radius);
+  background: var(--component-field-idle-background);
+  color: var(--component-field-value-color);
+  resize: vertical;
+}
+
+.noteField::placeholder {
+  color: var(--component-field-placeholder-color);
+}
+
+.noteField:focus {
+  outline: none;
+  border-color: var(--component-field-focus-border);
+  background: var(--component-field-focus-background);
+}
+
+.noteActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.error {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  flex: 1;
+  padding-left: var(--space-3);
+  border-left: var(--border-width) solid var(--color-info-error);
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 720px) {
+  .main {
+    padding-top: var(--space-6);
+    gap: var(--space-4);
+  }
+
+  .letterSection .letter {
+    padding: var(--space-6) var(--space-4) var(--space-8);
+  }
+
+  .note {
+    padding: var(--space-4);
+  }
+}
+
+/* ---------- Sending modal ---------- */
+
+.sending {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.spinner {
+  flex-shrink: 0;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  border: 3px solid var(--color-outline-1);
+  border-top-color: var(--color-primary-idle);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2400ms;
+  }
+}

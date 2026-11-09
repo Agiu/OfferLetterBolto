@@ -1,0 +1,288 @@
+/* A sheet of paper: white page, hairline edge, generous margins. */
+.paper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-height: 100%;
+  padding: calc(var(--space-8) * 1.5) calc(var(--space-8) * 1.75);
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+.letterhead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-outline-1);
+}
+
+.logo {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-4);
+  border: var(--border-width) dashed var(--color-primary-disabled);
+}
+
+.company {
+  composes: label from '../../styles/typography.module.css';
+}
+
+/* The subject line: the letter's title, as an email client prints it. */
+.subject {
+  composes: heading6 from '../../styles/typography.module.css';
+  margin-bottom: calc(var(--space-6) * -1 + var(--space-3));
+}
+
+/* From and To, with the date on the From line, ruled off from the letter below. */
+.envelope {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-outline-1);
+}
+
+.envelopeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-3);
+}
+
+.envelopeLabel {
+  width: 3em;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+/* At least 12em wide: on a narrow letter the date drops to its own line rather than squeeze it. */
+.envelopeValue {
+  flex: 1 1 12em;
+  min-width: 0;
+  margin: 0;
+  /* Long addresses break rather than run off a narrow letter. */
+  overflow-wrap: anywhere;
+}
+
+.sender {
+  font-weight: var(--font-weight-medium);
+}
+
+.address {
+  color: var(--color-text-secondary);
+}
+
+.date {
+  margin: 0 0 0 auto;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.body {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.heading {
+  composes: label from '../../styles/typography.module.css';
+  margin: var(--space-3) 0 0;
+}
+
+/* Gaps use the warning tint behind primary text: the warning colour itself fails contrast as text. */
+.gap {
+  padding: 0 var(--space-1);
+  border-radius: var(--space-1);
+  background: var(--color-info-warning-background);
+  box-shadow: inset 0 -1px 0 var(--color-info-warning);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.terms {
+  display: grid;
+  margin: var(--space-2) 0;
+  border-top: var(--border-width) solid var(--color-outline-1);
+}
+
+.term {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 2fr;
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-outline-1);
+}
+
+.term dt {
+  color: var(--color-text-secondary);
+}
+
+.custom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border: var(--border-width) dashed var(--color-outline-2);
+  border-radius: var(--radius-sm);
+}
+
+/* Skeleton text lines standing in for wording that hasn't been written yet. */
+.line {
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-1);
+}
+
+.short {
+  width: 60%;
+}
+
+.customNote {
+  color: var(--color-text-secondary);
+  padding-block: var(--space-2);
+}
+
+.signOff {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  padding-top: var(--space-4);
+}
+
+.senderName {
+  margin-top: var(--space-6);
+  font-weight: var(--font-weight-medium);
+}
+
+.senderTitle {
+  color: var(--color-text-secondary);
+}
+
+.signatures {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-8);
+  margin-top: calc(var(--space-8) * 1.5);
+}
+
+.signatureLine {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-outline-2);
+  color: var(--color-text-tertiary);
+}
+
+/* Card-sized letter: one step down the type scale, tighter margins. Still ≥12px. */
+.compact {
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.compact .letterhead {
+  padding-bottom: var(--space-3);
+}
+
+.compact .logo {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.compact .company,
+.compact .envelope,
+.compact .body,
+.compact .signOff {
+  font-size: var(--typography-paragraph4-font-size);
+  line-height: var(--typography-paragraph4-line-height);
+}
+
+.compact .subject {
+  margin-bottom: calc(var(--space-4) * -1 + var(--space-2));
+  font-size: var(--typography-paragraph2-font-size);
+  line-height: var(--typography-paragraph2-line-height);
+}
+
+.compact .envelope {
+  padding-bottom: var(--space-3);
+}
+
+.compact .body {
+  gap: var(--space-2);
+}
+
+.compact .heading {
+  margin-top: var(--space-1);
+  font-size: var(--typography-paragraph4-font-size);
+  line-height: var(--typography-paragraph4-line-height);
+  font-weight: var(--font-weight-semibold);
+}
+
+.compact .term {
+  grid-template-columns: minmax(96px, 1fr) 2fr;
+  gap: var(--space-3);
+  padding-block: 6px;
+}
+
+.compact .custom {
+  padding: var(--space-4);
+}
+
+.compact .senderName {
+  margin-top: var(--space-4);
+}
+
+.compact .signatures {
+  margin-top: var(--space-6);
+  gap: var(--space-6);
+}
+
+@media (max-width: 720px) {
+  .paper {
+    padding: var(--space-6);
+  }
+
+  /* From and To stack: a small label over the name and address, the date on its own line below. */
+  .envelope {
+    gap: var(--space-3);
+  }
+
+  .envelopeRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .envelopeLabel {
+    width: auto;
+    font-size: var(--typography-paragraph4-font-size);
+    line-height: var(--typography-paragraph4-line-height);
+  }
+
+  .envelopeValue {
+    flex: none;
+  }
+
+  .date {
+    margin: var(--space-1) 0 0;
+  }
+
+  /* Two classes: wins over the composed heading size. Long titles fit a phone's line. */
+  .paper .subject {
+    font-size: var(--typography-paragraph1-font-size);
+    line-height: var(--typography-paragraph1-line-height);
+  }
+
+  .term {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .signatures {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}

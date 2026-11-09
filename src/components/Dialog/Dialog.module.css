@@ -1,0 +1,80 @@
+.dialog {
+  width: min(520px, 100% - 2 * var(--layout-gutter));
+  max-height: calc(100dvh - 2 * var(--space-8));
+  padding: 0;
+  border: none;
+  border-radius: var(--component-panel-radius);
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  overflow: hidden; /* rounds the blue title band's corners */
+}
+
+/* Only when open: setting display on a closed dialog would show it. */
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog::backdrop {
+  background: color-mix(in srgb, var(--color-text-primary) 45%, transparent);
+}
+
+/* Bolto-blue band behind the title. White on primary/idle is 4.73:1 (large text). */
+.title {
+  composes: heading6 from '../../styles/typography.module.css';
+  flex-shrink: 0;
+  padding: var(--space-6);
+  background: var(--color-primary-idle);
+  color: var(--color-text-on-primary);
+  /* Lines fill from the left, so what carries over to the last line is short (see Dialog.tsx). */
+  text-wrap: wrap;
+}
+
+/* The body scrolls when it's long; the title and buttons stay in view. */
+.body {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+  padding: var(--space-6) var(--space-6) 0;
+  overflow-y: auto;
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-6);
+}
+
+/* "Cancel"-style actions sit on the left, away from the ones that change something. */
+.actions > :first-child:not(:only-child):not(:nth-last-child(2)) {
+  margin-right: auto;
+}
+
+@media (max-width: 720px) {
+  .title,
+  .actions {
+    padding: var(--space-4);
+  }
+
+  /* Smaller on phones, so a title still breaks into a long first line and a short second one. */
+  /* Two classes, so this beats the composed heading style whichever loads first. */
+  .dialog .title {
+    font-size: var(--typography-paragraph1-font-size);
+    line-height: var(--typography-paragraph1-line-height);
+  }
+
+  .body {
+    padding: var(--space-4) var(--space-4) 0;
+  }
+
+  .actions > * {
+    flex: 1 1 auto;
+  }
+}

@@ -1,0 +1,39 @@
+.button {
+  composes: label from '../../styles/typography.module.css';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--component-button-gap);
+  height: var(--component-button-height);
+  padding: 0 var(--component-button-padding-x);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--component-button-radius);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.primary {
+  background: var(--component-button-primary-background);
+  color: var(--component-button-primary-text);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--component-button-primary-background-hover);
+}
+
+.primary:disabled {
+  background: var(--component-button-primary-disabled-background);
+  color: var(--component-button-primary-disabled-text);
+  cursor: not-allowed;
+}
+
+.secondary {
+  background: var(--component-button-secondary-background);
+  border-color: var(--component-button-secondary-border);
+  color: var(--component-button-secondary-text);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--color-surface-1);
+}

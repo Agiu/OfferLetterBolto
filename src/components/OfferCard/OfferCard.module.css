@@ -1,0 +1,144 @@
+.card {
+  display: grid;
+  /* Fixed proportions so Pay / Start date line up across every card. */
+  grid-template-columns: minmax(0, 5fr) minmax(0, 5fr) minmax(0, 3fr);
+  grid-template-areas: 'person facts status';
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  border: var(--border-width) solid var(--color-outline-1);
+  border-radius: var(--radius-sm);
+  /* Status wash: tinted at the right edge, fully transparent by the left. Strength is a token
+     capped for text contrast; the status pill still carries the meaning on its own. */
+  background-color: var(--color-background);
+  background-image: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--status-color) var(--component-offer-card-status-tint), transparent),
+    transparent
+  );
+}
+
+/* Briefly tints a just-created offer so it's easy to spot. Animates the colour layer under the wash. */
+.isNew {
+  animation: arrive 2400ms ease-out;
+}
+
+@keyframes arrive {
+  from {
+    background-color: var(--color-surface-4);
+    border-color: var(--color-info-pill-background);
+  }
+}
+
+@media (forced-colors: active) {
+  .card {
+    background-image: none;
+  }
+}
+
+.person {
+  grid-area: person;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.name {
+  composes: paragraph2 from '../../styles/typography.module.css';
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+/* Drafts and ready offers open their letter; the link covers the whole card. */
+.open {
+  color: inherit;
+  text-decoration: none;
+}
+
+.open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+}
+
+.open:hover {
+  text-decoration: underline;
+}
+
+.open:focus-visible {
+  outline: none;
+}
+
+.open:focus-visible::after {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: 2px;
+}
+
+.card:has(.open) {
+  position: relative;
+}
+
+.card:has(.open:hover) {
+  border-color: var(--color-outline-2);
+}
+
+.role {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  color: var(--color-text-secondary);
+}
+
+.facts {
+  grid-area: facts;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.factLabel {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  color: var(--color-text-tertiary);
+}
+
+.factValue {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  color: var(--color-text-primary);
+}
+
+.notSet {
+  color: var(--color-text-tertiary);
+}
+
+.status {
+  grid-area: status;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.statusDate {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'person status'
+      'facts facts';
+    align-items: start;
+    gap: var(--space-4);
+    padding: var(--space-4);
+  }
+}

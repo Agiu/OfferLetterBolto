@@ -1,0 +1,240 @@
+/*
+ * Bolto-blue band, stuck to the top of the window. White text on primary/idle is 4.73:1.
+ * z-index keeps it above the letter carousel's arrows and the set-up page's floating bar.
+ */
+.band {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: var(--space-6) var(--space-8);
+  background: var(--color-primary-idle);
+  color: var(--color-text-on-primary);
+}
+
+/* Keyboard focus and in-page scrolling stop below the pinned band (height set by FlowHeader). */
+:root:has(.band) {
+  scroll-padding-top: calc(var(--flow-header-height, 0px) + var(--space-4));
+}
+
+/* What sits under the bar (the page title): same blue, but scrolls away. */
+.extension {
+  display: flow-root; /* keeps the title's margins inside the blue */
+  padding: 0 var(--space-8) var(--space-6);
+  background: var(--color-primary-idle);
+  color: var(--color-text-on-primary);
+}
+
+/* ---------- Moving between steps ---------- */
+
+/*
+ * Pick template → set up letter: a blue sheet starts as tall as the blue was on the page we
+ * came from and shrinks into the bar. It sits behind the bar's content but over the page.
+ */
+.morph {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 100%;
+  background: var(--color-primary-idle);
+  pointer-events: none;
+  animation: morph 620ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes morph {
+  from {
+    height: var(--morph-from);
+  }
+}
+
+/* Set up letter → pick template: the title and letters unroll down from the bar, then fade up. */
+.reveal {
+  animation: reveal 620ms cubic-bezier(0.65, 0, 0.35, 1) backwards;
+}
+
+.reveal > * {
+  animation: rise 480ms 240ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+
+@keyframes reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-6));
+  }
+}
+
+/*
+ * Pick template → set up letter: the title and letters fade up and away before the page
+ * changes, leaving plain blue for the next page to shrink. Keep in step with LEAVE_DURATION.
+ */
+.leaving,
+.leavingChildren > * {
+  animation: leave 260ms cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes leave {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--space-4) * -1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph,
+  .reveal,
+  .reveal > *,
+  .leaving,
+  .leavingChildren > * {
+    animation: none;
+  }
+}
+
+.band :focus-visible,
+.extension :focus-visible {
+  outline-color: var(--color-background);
+}
+
+/* Logo and way back on the left, phases in the 588px title column, aside on the right. */
+.bar {
+  display: grid;
+  grid-template-columns: 1fr min(588px, 100%) 1fr;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.logoLink {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+}
+
+.logo {
+  display: block;
+}
+
+.back {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding-left: var(--space-6);
+  border-left: var(--border-width) solid var(--color-primary-disabled);
+  color: var(--color-text-on-primary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.steps {
+  min-width: 0;
+}
+
+.aside {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 1100px) {
+  .bar {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'brand aside'
+      'steps steps';
+    gap: var(--space-4);
+  }
+
+  .brand {
+    grid-area: brand;
+  }
+
+  .aside {
+    grid-area: aside;
+  }
+
+  .steps {
+    grid-area: steps;
+    width: min(588px, 100%);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .band {
+    padding: var(--space-4) var(--layout-gutter);
+  }
+
+  .extension {
+    padding: 0 var(--layout-gutter) var(--space-4);
+  }
+
+  /*
+   * Figma 2056:382: one row. The Bolto mark, a divider running the band's full height, then the
+   * phases, which scroll sideways and fade out at the right edge.
+   */
+  .band {
+    padding-block: 0;
+    /* A rule under the bar, edge to edge, meeting the divider beside the mark. */
+    border-bottom: var(--border-width) solid var(--color-primary-disabled);
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'brand steps'
+      'aside aside';
+    gap: 0 var(--space-6);
+  }
+
+  .brand {
+    align-self: stretch;
+    padding-right: var(--space-8);
+    border-right: var(--border-width) solid var(--color-primary-disabled);
+  }
+
+  /* Just the mark: the wordmark's bolt, cropped from the full logo and drawn at 20px. */
+  .logo {
+    width: 14px;
+    object-fit: none;
+    object-position: 100% 50%;
+    transform: scale(1.4);
+  }
+
+  .back {
+    display: none;
+  }
+
+  .steps {
+    width: auto;
+    margin: 0;
+    padding-block: var(--space-8);
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--space-8) * 2), transparent);
+  }
+
+  .aside {
+    justify-content: flex-start;
+    padding-bottom: var(--space-4);
+  }
+
+  .aside:empty {
+    display: none;
+  }
+}

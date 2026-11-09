@@ -1,0 +1,5 @@
+node_modules
+dist
+
+# Local SQLite database (created on first run, seeded from server/seed.ts)
+data/

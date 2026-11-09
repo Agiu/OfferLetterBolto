@@ -1,0 +1,127 @@
+.root {
+  position: relative;
+}
+
+.chevron {
+  transition: transform 150ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: 10;
+  width: 320px;
+  max-width: calc(100vw - 2 * var(--layout-gutter));
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-outline-1);
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
+}
+
+/* Search box uses the Field component tokens: filled idle, white + primary border on focus. */
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--component-field-input-gap);
+  height: var(--component-field-input-height);
+  padding: 0 var(--component-field-padding-x);
+  border: var(--border-width) solid var(--component-field-idle-border);
+  border-radius: var(--component-field-radius);
+  background: var(--component-field-idle-background);
+  color: var(--color-text-secondary);
+  cursor: text;
+}
+
+.search:focus-within {
+  border-color: var(--component-field-focus-border);
+  background: var(--component-field-focus-background);
+}
+
+.input {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--component-field-value-color);
+}
+
+/* The field border already shows focus; drop the global ring. */
+.input:focus-visible {
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--component-field-placeholder-color);
+}
+
+.groupLabel {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  color: var(--color-text-secondary);
+}
+
+.list {
+  max-height: 280px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.optionActive {
+  background: var(--color-surface-4);
+}
+
+.optionText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* "Start an offer for this person" cue; nudges forward on the active row. */
+.optionArrow {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  transition:
+    transform 150ms ease,
+    color 150ms ease;
+}
+
+.optionActive .optionArrow {
+  color: var(--color-primary-idle);
+  transform: translateX(2px);
+}
+
+.optionName {
+  composes: label from '../../styles/typography.module.css';
+  color: var(--color-text-primary);
+}
+
+.optionMeta {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  color: var(--color-text-secondary);
+}
+
+.empty {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  color: var(--color-text-secondary);
+}

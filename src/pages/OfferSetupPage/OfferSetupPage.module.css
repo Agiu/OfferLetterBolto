@@ -1,0 +1,584 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.main {
+  flex: 1;
+  padding: var(--space-8) var(--layout-gutter) 0;
+}
+
+/*
+ * Figma 2060:444: a grey sheet (1181px on a 1440 frame) with the letter as a white page down
+ * its middle, 850px wide, a blue strip across its top. Each field's dot sits in the grey margin
+ * to the page's left. The progress bar floats over the sheet's lower edge and sticks to the
+ * bottom of the window while you scroll.
+ */
+.sheet {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 850px) minmax(0, 1fr);
+  align-items: start;
+  width: min(1181px, 100%);
+  margin-inline: auto;
+  padding: 0 var(--space-8);
+  border: var(--border-width) solid var(--color-outline-2);
+  border-bottom: none;
+  border-radius: var(--component-panel-radius) var(--component-panel-radius) 0 0;
+  background: var(--color-surface-1);
+}
+
+.sheet > * {
+  grid-column: 2;
+}
+
+/* Auto margins would shrink grid items to their content; the letter fills its column. */
+.sheet > :not(.bar):not(.fieldDots) {
+  width: 100%;
+}
+
+/* The blue strip on top of the letter: which letter, for whom, and Change template. */
+.letterType {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  display: flex;
+  align-items: stretch;
+  min-height: 76px;
+  background: var(--color-primary-idle);
+  color: var(--color-text-on-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.letterName {
+  flex: 1;
+  align-self: center;
+  padding: var(--space-4) calc(var(--space-8) + var(--space-1));
+}
+
+.changeTemplate {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 calc(var(--space-8) + var(--space-2));
+  border: none;
+  border-left: var(--border-width) solid var(--color-primary-disabled);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.changeTemplate:hover {
+  background: var(--component-button-primary-background-hover);
+}
+
+.changeTemplate:focus-visible {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: -4px;
+}
+
+/* Arriving from picking a template: the letter rises into place as the blue shrinks away. */
+.arrive {
+  animation: arrive 560ms 200ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-8) * 2));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrive {
+    animation: none;
+  }
+}
+
+/* The white page. Two classes so this wins over the letter's own paper styles whichever loads first. */
+.sheet .letter {
+  min-height: 0;
+  padding: calc(var(--space-8) * 1.5) calc(var(--space-8) + var(--space-1)) calc(var(--space-8) * 2);
+  background: var(--color-background);
+}
+
+/* ---------- Fields on the letter ---------- */
+
+/*
+ * The design system's Field (Figma 2031:282), sized to sit in a sentence: filled surface/1, no
+ * border, 10px corners; white with a Bolto-blue border on focus. It keeps the letter's type size
+ * so it reads as part of the sentence. Missing details are filled with the warning tint instead
+ * (placeholder text on it is 4.65:1).
+ */
+.field {
+  width: var(--field-width, auto);
+  max-width: 100%;
+  height: auto;
+  margin: 1px 0;
+  padding: 1px var(--space-2);
+  border: var(--border-width) solid var(--component-field-idle-border);
+  border-radius: var(--component-field-radius);
+  background: var(--component-field-idle-background);
+  color: var(--component-field-value-color);
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease;
+}
+
+.field::placeholder {
+  color: var(--component-field-placeholder-color);
+  opacity: 1;
+}
+
+.missing {
+  background: var(--color-info-warning-background);
+}
+
+.field:focus,
+.field:focus-visible {
+  outline: none;
+  border-color: var(--component-field-focus-border);
+  background: var(--component-field-focus-background);
+}
+
+/* Where supported, text boxes fit their text exactly, whatever its letters' widths. */
+@supports (field-sizing: content) {
+  input.field:not(.wide):not(.date) {
+    width: auto;
+    min-width: calc(2ch + 2 * var(--space-2) + 2px);
+    field-sizing: content;
+  }
+}
+
+/* The title takes the full line and grows to fit its text, wrapping rather than cutting it off. */
+.wide {
+  display: block;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  field-sizing: content;
+}
+
+/* Browsers without field-sizing: room for two lines. */
+@supports not (field-sizing: content) {
+  .wide {
+    min-height: 2.6em;
+  }
+}
+
+/* Size to the value where supported (Chromium); fixed widths elsewhere. */
+.date {
+  width: 15ch;
+  field-sizing: content;
+}
+
+/* Dropdowns: the native arrow is replaced by the design system's chevron (see .selectWrap). */
+.select {
+  padding-right: calc(var(--space-2) + var(--icon-size-sm));
+  appearance: none;
+  cursor: pointer;
+  field-sizing: content;
+}
+
+.selectWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--space-1);
+  color: var(--color-text-secondary);
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+/* The date's calendar button, quieter so the date leads. */
+.date::-webkit-calendar-picker-indicator {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* "$" + amount (+ period), kept together on one line. */
+.compound {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+/* ---------- Hire setup (not in the letter) ---------- */
+
+/*
+ * Under the letter, on the grey: a white page of its own with the same blue strip across its top
+ * as the letter, since it isn't part of the letter.
+ */
+.hire {
+  margin-top: var(--space-6);
+  background: var(--color-background);
+}
+
+.hireHead {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 76px;
+  padding: var(--space-4) calc(var(--space-8) + var(--space-1));
+  background: var(--color-primary-idle);
+  color: var(--color-text-on-primary);
+}
+
+.hireTitle {
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+}
+
+.hireNote {
+  color: var(--color-text-on-primary);
+}
+
+.hireGrid {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-6) calc(var(--space-8) + var(--space-1)) var(--space-8);
+}
+
+.hireRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hireLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 140px;
+  color: var(--color-text-secondary);
+}
+
+.hireValue {
+  color: var(--color-text-primary);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.check input {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  margin: 0;
+  accent-color: var(--color-primary-idle);
+}
+
+/* ---------- Field dots beside the letter ---------- */
+
+/*
+ * Covers the whole sheet, not a grid column (an absolutely placed grid item with a column set
+ * would be positioned within that column); the dots are placed by measuring each field.
+ */
+.sheet > .fieldDots {
+  position: absolute;
+  inset: 0;
+  z-index: 1; /* over the letter's own paper; under the fade and the progress bar */
+  grid-column: auto;
+  pointer-events: none;
+}
+
+/*
+ * Hollow ring: still to fill in. Solid green: filled. Shape tells them apart as well as colour
+ * (ring is text/tertiary, 5.3:1 on white; green is info/success, 4.6:1).
+ */
+.fieldDot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--color-text-tertiary);
+  border-radius: var(--radius-pill);
+  background: var(--color-background);
+  translate: -50% -50%;
+  transition:
+    top 200ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.fieldDotFilled {
+  border-color: var(--color-info-success);
+  background: var(--color-info-success);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fieldDot {
+    transition: none;
+  }
+}
+
+/* ---------- Fade at the bottom of the window ---------- */
+
+/* White gradient over the foot of the window; the progress bar (z-index 2) stays above it. */
+.fade {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 1;
+  height: calc(var(--space-8) * 6);
+  background: linear-gradient(to bottom, transparent, var(--color-background) 65%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+
+.fadeOn {
+  opacity: 1;
+}
+
+/* ---------- Progress bar ---------- */
+
+/* Light-blue pill floating over the bottom of the letter (850 × 75 in the wireframe). */
+.sheet > .bar {
+  grid-column: 1 / -1;
+}
+
+.bar {
+  position: sticky;
+  bottom: var(--space-6);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: min(850px, 100%);
+  margin: calc(var(--space-8) * 2) auto 0;
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-6);
+  border: var(--border-width) solid var(--color-outline-2);
+  border-radius: var(--component-panel-radius);
+  background: var(--color-background);
+}
+
+/*
+ * Everything's filled in: a soft Bolto-blue glow breathes in from the right, toward Review & send.
+ * It sits under the bar's content (the bar isolates it), so text keeps its contrast.
+ */
+.barReady {
+  isolation: isolate;
+}
+
+.barReady::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(to left, var(--color-info-pill-background), transparent 70%);
+  opacity: 0;
+  animation: ready-pulse 2400ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ready-pulse {
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barReady::before {
+    opacity: 0.6;
+    animation: none;
+  }
+}
+
+/* 24px primary/idle on white is 4.7:1. */
+.counter,
+.sectionName {
+  composes: heading6 from '../../styles/typography.module.css';
+  color: var(--color-primary-idle);
+  white-space: nowrap;
+}
+
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
+.barText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* One row: status, dot and save state share a centre line. */
+.barMeta {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+.done {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--color-text-primary);
+}
+
+/* The progress track: one bar for the whole letter, filling blue as details are filled in. */
+.track {
+  position: relative;
+  flex: 1.4;
+  min-width: 120px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-outline-1);
+  overflow: hidden;
+}
+
+.trackFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--color-primary-idle);
+  transition: width 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trackFill {
+    transition: none;
+  }
+}
+
+.barActions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 720px) {
+  .main {
+    padding: var(--space-4) 0 0;
+  }
+
+  .sheet {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 var(--layout-gutter);
+    border-inline: none;
+    border-radius: 0;
+  }
+
+  .letterName {
+    padding-inline: var(--space-4);
+  }
+
+  .changeTemplate,
+  .hireHead,
+  .hireGrid {
+    padding-inline: var(--space-4);
+  }
+
+  .sheet .letter {
+    padding: var(--space-6) var(--space-4) var(--space-8);
+  }
+
+  .sheet > * {
+    grid-column: 1;
+  }
+
+  .bar {
+    flex-wrap: wrap;
+    bottom: var(--space-3);
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  /* Two classes: wins over the composed heading size. */
+  .bar .counter,
+  .bar .sectionName {
+    font-size: var(--typography-paragraph1-font-size);
+    line-height: var(--typography-paragraph1-line-height);
+  }
+
+  /* On a phone what's left (and the save state) sits in the bar's top-right corner. */
+  .barText {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .sectionName {
+    min-width: 0;
+    white-space: normal;
+  }
+
+  /* What's left and the save state on one line, in the top-right corner. */
+  .barMeta {
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  /* On a phone the track gets its own full-width row, above the buttons. */
+  .track {
+    flex: 1 1 100%;
+    order: 1;
+  }
+
+  .barActions {
+    order: 2;
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* The title under the header band, on the same blue (as on the template page). */
+.heroColumn {
+  width: min(588px, 100%);
+  margin: var(--space-2) auto var(--space-2);
+}
+
+.heroTitle {
+  composes: heading4 from '../../styles/typography.module.css';
+  color: var(--color-text-on-primary);
+}
+
+.heroTitle:focus {
+  outline: none;
+}
+
+.heroDescription {
+  composes: paragraph2 from '../../styles/typography.module.css';
+  margin-top: var(--space-2);
+  color: var(--color-text-on-primary);
+}
+
+@media (max-width: 720px) {
+  /* Clear of the rule under the bar, and room below before the letter, as on the template page. */
+  .heroColumn {
+    margin-block: var(--space-8) var(--space-4);
+  }
+
+  .heroColumn .heroTitle {
+    font-size: var(--typography-heading6-font-size);
+    line-height: var(--typography-heading6-line-height);
+    letter-spacing: var(--typography-heading6-letter-spacing);
+  }
+}

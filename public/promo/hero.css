@@ -1,0 +1,795 @@
+/* =====================================================================
+ * Campaign hero: full-bleed Bolto blue, oversized type, the flow in a
+ * floating product window with callouts, and the mono-word background.
+ * Loaded last, so it overrides the earlier hero rules.
+ * ===================================================================== */
+
+:root {
+  --hero-blue: #2463f5;
+  --hero-deep: #0b2fa8;
+}
+
+/* ---------- Nav over the blue ---------- */
+
+.nav {
+  transition: background 300ms ease, color 300ms ease, box-shadow 300ms ease;
+}
+
+.nav.on-hero {
+  background: transparent;
+  backdrop-filter: none;
+  color: var(--white);
+}
+
+.nav.on-hero .brand {
+  color: var(--white);
+}
+
+.nav.on-hero .nav-links a:hover {
+  color: var(--white);
+  opacity: 0.75;
+}
+
+.nav.on-hero .btn {
+  background: var(--white);
+  color: var(--blue-text);
+}
+
+.nav.on-hero .btn-ghost {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
+}
+
+.nav.on-hero kbd {
+  background: rgba(23, 23, 23, 0.08);
+}
+
+/* Scrolled but still over the blue: frosted blue, so the hero doesn't run under the links. */
+.nav.on-hero.nav-solid {
+  background: rgba(30, 85, 230, 0.82);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.nav:not(.on-hero) {
+  box-shadow: 0 1px 0 var(--line);
+}
+
+/* The hero runs up under the sticky nav. */
+main {
+  margin-top: -80px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  padding: 160px 0 0;
+  overflow: hidden;
+  background: var(--hero-blue);
+  color: var(--white);
+  isolation: isolate;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 50% at 85% 10%, rgba(140, 190, 255, 0.55), transparent 70%),
+    radial-gradient(50% 45% at 5% 95%, rgba(5, 25, 120, 0.55), transparent 70%),
+    linear-gradient(180deg, var(--hero-blue) 0%, #1f55e6 60%, var(--hero-deep) 100%);
+}
+
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.hero-inner {
+  position: relative;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 99px;
+  font: 500 12px/16px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+.kicker-pill {
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--white);
+  color: var(--blue);
+}
+
+.display {
+  margin-top: 28px;
+  font-size: clamp(52px, 10.2vw, 156px);
+  line-height: 0.92;
+  font-weight: 500;
+  letter-spacing: -0.055em;
+}
+
+.display .line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.display .line > span {
+  display: inline-block;
+  animation: rise 900ms cubic-bezier(0.2, 0.75, 0.15, 1) backwards;
+}
+
+.display .line:nth-child(2) > span {
+  animation-delay: 120ms;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+.display em {
+  font-style: normal;
+  background: linear-gradient(100deg, #ffffff 20%, #bfe0ff 50%, #ffffff 80%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 6s ease-in-out infinite;
+  padding-right: 0.06em;
+}
+
+@keyframes shine {
+  50% {
+    background-position: 100% 0;
+  }
+}
+
+.hero-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+  animation: fade-up 800ms 350ms cubic-bezier(0.2, 0.75, 0.15, 1) backwards;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.hero .hero-sub {
+  max-width: 24em;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 21px;
+  line-height: 29px;
+}
+
+.hero-steps {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hero-steps li {
+  display: grid;
+  gap: 2px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.hero-steps li + li {
+  border-left: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.hero-steps b {
+  font: 500 11px/14px var(--mono);
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ---------- The product window and callouts ---------- */
+
+.stage-wrap {
+  position: relative;
+  margin-top: 72px;
+  padding-bottom: 0;
+  perspective: 1600px;
+}
+
+.window {
+  position: relative;
+  border-radius: 14px 14px 0 0;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 8px 8px 0;
+  box-shadow: 0 60px 120px -40px rgba(3, 15, 70, 0.75), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  transform-origin: 50% 0;
+  animation: tilt-in 1100ms 300ms cubic-bezier(0.2, 0.75, 0.15, 1) backwards;
+}
+
+@keyframes tilt-in {
+  from {
+    opacity: 0;
+    transform: translateY(80px) rotateX(18deg);
+  }
+}
+
+.window-chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 8px;
+}
+
+.window-chrome i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.window-chrome span {
+  margin: 0 auto;
+  padding: 2px 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.16);
+  font: 500 11px/18px var(--mono);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+  transform: translateX(-24px);
+}
+
+.window .stage {
+  color: var(--ink);
+  margin-top: 0;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  box-shadow: none;
+}
+
+/* Callouts floating around the window, nudged by the pointer. */
+.chip {
+  position: absolute;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: 0 24px 50px -20px rgba(3, 15, 70, 0.55), 0 0 0 1px rgba(23, 23, 23, 0.04);
+  transform: translate3d(var(--px, 0), var(--py, 0), 0) rotate(var(--r, 0deg));
+  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: pop 700ms cubic-bezier(0.3, 1.4, 0.4, 1) backwards;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.85);
+  }
+}
+
+.chip-a { --r: -3deg; left: -28px; top: 120px; animation-delay: 900ms; }
+.chip-b { --r: 2.5deg; right: -36px; top: 60px; animation-delay: 1050ms; }
+.chip-c { --r: -2deg; right: -20px; top: 380px; animation-delay: 1200ms; }
+.chip-d { --r: 3deg; left: -40px; top: 430px; animation-delay: 1350ms; }
+
+.chip-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(31, 157, 85, 0.18);
+}
+
+.chip-bar {
+  position: relative;
+  width: 64px;
+  height: 6px;
+  border-radius: 9px;
+  background: #e8ebf0;
+  overflow: hidden;
+}
+
+.chip-bar span {
+  position: absolute;
+  inset: 0;
+  background: var(--blue);
+  border-radius: inherit;
+  animation: fill 2.8s 1.4s cubic-bezier(0.5, 0, 0.2, 1) infinite alternate backwards;
+}
+
+@keyframes fill {
+  from {
+    width: 15%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.chip-check {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.chip-info {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  color: var(--blue-text);
+  font: 600 11px/1 var(--mono);
+  font-style: normal;
+}
+
+/* ---------- Smaller screens ---------- */
+
+@media (max-width: 1240px) {
+  .chip-a,
+  .chip-d {
+    left: 4px;
+  }
+
+  .chip-b,
+  .chip-c {
+    right: 4px;
+  }
+}
+
+@media (max-width: 960px) {
+  .chip-c,
+  .chip-d {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  main {
+    margin-top: -64px;
+  }
+
+  .hero {
+    padding-top: 108px;
+  }
+
+  .display {
+    font-size: clamp(46px, 14.5vw, 64px);
+    line-height: 0.95;
+  }
+
+  .hero .hero-sub {
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .hero-steps {
+    width: 100%;
+  }
+
+  .hero-steps li {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .stage-wrap {
+    margin-top: 48px;
+    width: 100%;
+  }
+
+  .window {
+    border-radius: 0;
+    padding: 6px 6px 0;
+  }
+
+  .window .stage {
+    margin: 0;
+  }
+
+  .window-chrome span {
+    display: none;
+  }
+
+  .chip {
+    font-size: 13px;
+    padding: 9px 12px;
+  }
+
+  .chip-a {
+    left: 10px;
+    top: -26px;
+  }
+
+  .chip-b {
+    right: 10px;
+    top: -22px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .display em,
+  .chip-bar span {
+    animation: none;
+  }
+
+  .chip-bar span {
+    width: 100%;
+  }
+}
+
+/* ---------- ASCII background: the mono words, white on the blue ---------- */
+
+.hero .glyphs {
+  inset: 0 0 auto 40%;
+  height: 640px;
+  z-index: 0;
+  color: rgba(255, 255, 255, 0.13);
+  mask-image: radial-gradient(ellipse at 60% 40%, #000 35%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at 60% 40%, #000 35%, transparent 78%);
+}
+
+.hero .glyphs span.lit {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* The headline and window sit over the words. */
+.hero-inner,
+.stage-wrap {
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .hero .glyphs {
+    display: block;
+    inset: 0 0 auto 0;
+    height: 520px;
+    color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* ---------- Nav: a blur that fades out downward, not a box ---------- */
+
+.nav,
+.nav.on-hero,
+.nav.on-hero.nav-solid,
+.nav:not(.on-hero) {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -48px;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: linear-gradient(to bottom, rgba(252, 252, 252, 0.88), rgba(252, 252, 252, 0));
+  mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+/* Over the blue: a blue tint. Past the hero: the paper colour. */
+.nav.on-hero::before {
+  background: linear-gradient(to bottom, rgba(30, 85, 230, 0.7), rgba(30, 85, 230, 0));
+}
+
+.nav.nav-solid::before,
+.nav:not(.on-hero)::before {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .hero .glyphs {
+    color: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/* ---------- The headline stays on exactly two lines at every width ---------- */
+
+/* Sized from the column width: "with reassurance." is about 7 ems wide. */
+.display,
+.hero .display {
+  font-size: min(150px, calc((min(100vw, 1140px + 48px) - 48px) / 7.5));
+}
+
+.display .line {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .display,
+  .hero .display {
+    font-size: calc((100vw - 32px) / 7.5);
+  }
+}
+
+/* The design system's check icon (lucide), used wherever a tick appears. */
+.ck {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 640px) {
+  .hero .glyphs span.lit {
+    color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/*
+ * Centre the checks in their circles. The step number is still in the markup (hidden at size 0);
+ * in a grid it took a row of its own and pushed the check off-centre, so use flex instead.
+ */
+.app-steps li.done i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ms-row i .ck {
+  margin: 0 auto;
+}
+
+.ms-row i {
+  display: inline-flex;
+  align-self: center;
+  justify-content: center;
+}
+
+/* ---------- Candidates on file: the database card ---------- */
+
+.cards-1 {
+  grid-template-columns: 1fr;
+}
+
+.card-wide {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 40px;
+  padding: 32px;
+}
+
+.wide-copy {
+  display: grid;
+  gap: 16px;
+}
+
+.card-wide .card-copy {
+  margin-top: 0;
+}
+
+.wide-points {
+  display: grid;
+  gap: 10px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.wide-points li {
+  display: flex;
+  gap: 10px;
+}
+
+.wide-points i,
+.db-tag i {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  color: var(--blue-text);
+}
+
+.mock-db {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.db-record,
+.db-letter {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.db-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.db-head span:last-child {
+  display: grid;
+  line-height: 18px;
+}
+
+.db-head b {
+  font-weight: 500;
+}
+
+.db-head em {
+  font-style: normal;
+  font: 500 10px/14px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.db-avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.db-record dl {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.db-record dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.db-record dt {
+  color: var(--ink-2);
+}
+
+.db-record dd {
+  margin: 0;
+  text-align: right;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.db-arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 16px;
+}
+
+.db-letter {
+  background: var(--white);
+  line-height: 30px;
+}
+
+.db-letter-title {
+  font: 500 10px/14px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* Auto-filled details glow blue for a moment, as if they've just arrived. */
+.db-fill {
+  background: var(--blue-soft);
+  animation: arrive-fill 3.2s ease-in-out infinite;
+}
+
+.db-fill:nth-of-type(2) { animation-delay: 300ms; }
+.db-fill:nth-of-type(3) { animation-delay: 600ms; }
+
+@keyframes arrive-fill {
+  0%, 60%, 100% { background: #f1f1f0; }
+  20%, 40% { background: var(--blue-soft); }
+}
+
+.db-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--blue-text);
+}
+
+@media (max-width: 960px) {
+  .card-wide {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mock-db {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .db-arrow {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .db-fill {
+    animation: none;
+  }
+}

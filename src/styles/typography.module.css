@@ -1,0 +1,50 @@
+/* One class per text style in tokens.json → typography. Compose these from component modules. */
+
+.heading4 {
+  font-size: var(--typography-heading4-font-size);
+  line-height: var(--typography-heading4-line-height);
+  font-weight: var(--typography-heading4-font-weight);
+  letter-spacing: var(--typography-heading4-letter-spacing);
+}
+
+.heading6 {
+  font-size: var(--typography-heading6-font-size);
+  line-height: var(--typography-heading6-line-height);
+  font-weight: var(--typography-heading6-font-weight);
+  letter-spacing: var(--typography-heading6-letter-spacing);
+}
+
+.paragraph1 {
+  font-size: var(--typography-paragraph1-font-size);
+  line-height: var(--typography-paragraph1-line-height);
+  font-weight: var(--typography-paragraph1-font-weight);
+  letter-spacing: var(--typography-paragraph1-letter-spacing);
+}
+
+.paragraph2 {
+  font-size: var(--typography-paragraph2-font-size);
+  line-height: var(--typography-paragraph2-line-height);
+  font-weight: var(--typography-paragraph2-font-weight);
+  letter-spacing: var(--typography-paragraph2-letter-spacing);
+}
+
+.paragraph3 {
+  font-size: var(--typography-paragraph3-font-size);
+  line-height: var(--typography-paragraph3-line-height);
+  font-weight: var(--typography-paragraph3-font-weight);
+  letter-spacing: var(--typography-paragraph3-letter-spacing);
+}
+
+.label {
+  font-size: var(--typography-label-font-size);
+  line-height: var(--typography-label-line-height);
+  font-weight: var(--typography-label-font-weight);
+  letter-spacing: var(--typography-label-letter-spacing);
+}
+
+.paragraph4 {
+  font-size: var(--typography-paragraph4-font-size);
+  line-height: var(--typography-paragraph4-line-height);
+  font-weight: var(--typography-paragraph4-font-weight);
+  letter-spacing: var(--typography-paragraph4-letter-spacing);
+}

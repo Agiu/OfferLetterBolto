@@ -1,0 +1,56 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--component-field-gap);
+}
+
+.labelRow {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  display: flex;
+  gap: 2px;
+  color: var(--component-field-label-color);
+}
+
+.required {
+  color: var(--component-field-required-color);
+}
+
+.input {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  width: 100%;
+  height: var(--component-field-input-height);
+  padding: 0 var(--component-field-padding-x);
+  border: var(--border-width) solid var(--component-field-idle-border);
+  border-radius: var(--component-field-radius);
+  background: var(--component-field-idle-background);
+  color: var(--component-field-value-color);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--component-field-placeholder-color);
+}
+
+.input:focus,
+.input:focus-visible {
+  outline: none;
+  border-color: var(--component-field-focus-border);
+  background: var(--component-field-focus-background);
+}
+
+.invalid,
+.invalid:focus {
+  border-color: var(--component-field-error-border);
+  background: var(--component-field-error-background);
+}
+
+.hint {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  color: var(--color-text-secondary);
+}
+
+/* Error text uses text-primary: the error token colour is only 3.6:1 on white. The border carries the colour. */
+.error {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  color: var(--color-text-primary);
+}

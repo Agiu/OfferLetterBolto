@@ -1,0 +1,20 @@
+/* Matches the "Offer statuses" pills in Figma: neutral pill, primary text. */
+.pill {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--component-tag-padding-y) var(--component-tag-padding-x);
+  border: var(--border-width) solid var(--color-outline-1);
+  border-radius: var(--component-tag-radius);
+  background: var(--color-surface-1);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--dot-color);
+}

@@ -1,0 +1,223 @@
+.container {
+  width: min(var(--layout-content-width), 100% - 2 * var(--layout-gutter));
+  margin-inline: auto;
+}
+
+/* Position drops to its own line after the comma. */
+.position {
+  display: block;
+}
+
+/* Full-height column so the footer sits at the bottom of the window on short pages. */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* The letter carousel bleeds to the window edges; never let it add a sideways scroll. */
+  overflow-x: clip;
+}
+
+/* Sticks to the bottom of the window when the page is taller than the screen. */
+.footer {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding-bottom: var(--space-8);
+  background: var(--color-background);
+}
+
+/* Divider spans the content column only, matching the title and template grid. */
+.actions {
+  composes: container;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-outline-1);
+}
+
+/* Error text uses text-primary: the error token colour fails contrast as text. */
+.saveError {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  align-self: center;
+  margin-right: auto;
+  padding-left: var(--space-3);
+  border-left: var(--border-width) solid var(--color-info-error);
+  color: var(--color-text-primary);
+}
+
+/* Title column under the pinned blue bar (FlowHeader), whose bottom padding adds --space-6. */
+.heroColumn {
+  width: min(588px, 100%);
+  margin: calc(var(--space-8) + var(--space-4) - var(--space-6)) auto calc(var(--space-8) + var(--space-4));
+}
+
+.heroTitle {
+  composes: heading4 from '../../styles/typography.module.css';
+  color: var(--color-text-on-primary);
+}
+
+.heroTitle:focus {
+  outline: none;
+}
+
+/* Name and position underlined, as in the wireframe; blue highlight isn't possible on blue. */
+.underlined {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+.previewMain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--space-8) + var(--space-2));
+  padding: var(--space-8) var(--layout-gutter) calc(var(--space-8) * 2);
+}
+
+
+/* Panel under the carousel: names the letter in the middle and holds its title. */
+.panel {
+  position: relative; /* the info bubble opens above it */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(532px, 100%);
+  padding: var(--space-6);
+  border-radius: var(--component-panel-radius);
+  background: var(--color-surface-4);
+}
+
+.panelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* 24px primary/idle on surface/4 is 4.1:1: passes AA for large text (24px+). */
+.panelTitle {
+  composes: heading6 from '../../styles/typography.module.css';
+  margin-right: var(--space-1);
+  color: var(--color-primary-idle);
+}
+
+/* Tag text in text-primary: the tinted tag colours fail contrast as text. */
+.tag {
+  composes: paragraph4 from '../../styles/typography.module.css';
+  padding: var(--component-tag-padding-y) var(--component-tag-padding-x);
+  border-radius: var(--component-tag-radius);
+  background: var(--component-tag-info-background);
+  color: var(--color-text-primary);
+}
+
+/*
+ * The info bubble opens right above the panel, across its width, rather than beside the icon:
+ * the icon's own box isn't positioned, so the bubble is placed against the panel.
+ */
+.panelInfo {
+  position: static;
+  display: inline-flex;
+}
+
+.panelInfo [role='tooltip'] {
+  top: auto;
+  bottom: calc(100% + var(--space-2));
+  left: 0;
+  right: 0;
+  width: auto;
+  max-width: none;
+}
+
+/* Short laptop screens: tighten the band so more of the letter and panel fit above the fold. */
+@media (max-height: 820px) and (min-width: 721px) {
+  .heroColumn {
+    margin-block: 0 var(--space-2);
+  }
+
+  .previewMain {
+    padding-top: calc(var(--space-8) + var(--space-4));
+  }
+}
+
+.panelField {
+  margin-top: var(--space-2);
+}
+
+/* On the tinted panel the filled input would disappear, so it's white with a hairline edge. */
+.panelField input:not(:focus):not([aria-invalid]) {
+  border-color: var(--color-outline-2);
+  background: var(--color-background);
+}
+
+@media (max-width: 720px) {
+  /* Clear of the rule under the bar, as drawn (~34px). */
+  .heroColumn {
+    margin-block: var(--space-8) var(--space-2);
+  }
+
+  .heroColumn .heroTitle {
+    font-size: var(--typography-heading6-font-size);
+    line-height: var(--typography-heading6-line-height);
+    letter-spacing: var(--typography-heading6-letter-spacing);
+  }
+
+  .underlined {
+    text-underline-offset: 4px;
+  }
+
+  .previewMain {
+    padding-top: var(--space-8);
+    gap: var(--space-8);
+  }
+
+  /*
+   * Figma 2056:382: under the blue, a light-blue block to the bottom of the screen holds the
+   * letter's name, its title and Continue. The bubble opens above the block, gutter to gutter.
+   */
+  .page {
+    background: var(--color-surface-4);
+  }
+
+  .previewMain {
+    position: relative;
+    align-items: stretch;
+    padding: var(--space-6) var(--layout-gutter) var(--space-4);
+  }
+
+  .panel {
+    position: static;
+    width: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .panelInfo [role='tooltip'] {
+    left: var(--layout-gutter);
+    right: var(--layout-gutter);
+  }
+
+  .panelField input:not(:focus):not([aria-invalid]) {
+    border-color: var(--color-primary-idle);
+  }
+
+  .footer {
+    padding-bottom: calc(var(--space-4) + var(--space-1));
+    background: var(--color-surface-4);
+  }
+
+  /* Continue sits under a rule running edge to edge across the block. */
+  .actions {
+    width: 100%;
+    padding: calc(var(--space-4) + var(--space-1)) var(--layout-gutter) 0;
+    border-top: var(--border-width) solid var(--color-primary-disabled);
+  }
+
+  /* Only Continue, as drawn; the logo in the bar leads back to the list. */
+  .secondaryAction {
+    display: none;
+  }
+}

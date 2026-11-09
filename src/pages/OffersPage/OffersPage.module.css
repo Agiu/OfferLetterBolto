@@ -1,0 +1,93 @@
+.container {
+  width: min(var(--layout-content-width), 100% - 2 * var(--layout-gutter));
+  margin-inline: auto;
+}
+
+/* The note that this page is only scaffolding for the journey. */
+.disclaimer {
+  border-bottom: var(--border-width) solid var(--color-outline-1);
+  background: var(--color-info-pill-background);
+  color: var(--color-text-primary);
+}
+
+.disclaimerInner {
+  composes: container;
+  composes: paragraph3 from '../../styles/typography.module.css';
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+}
+
+.disclaimerInner strong {
+  font-weight: var(--font-weight-semibold);
+}
+
+.disclaimerIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-primary-idle);
+}
+
+.header {
+  padding-block: calc(var(--space-8) * 4) calc(var(--space-8) * 3);
+  background: var(--color-surface-1);
+}
+
+.headerInner {
+  composes: container;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.title {
+  composes: heading4 from '../../styles/typography.module.css';
+  color: var(--color-text-primary);
+}
+
+.main {
+  composes: container;
+  padding-top: var(--space-8);
+  /* Room for the bottom fade so the last card can scroll clear of it. */
+  padding-bottom: calc(var(--space-8) * 4);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+.empty {
+  composes: paragraph3 from '../../styles/typography.module.css';
+  padding: var(--space-8) var(--space-6);
+  border: var(--border-width) dashed var(--color-outline-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.fade {
+  position: fixed;
+  inset: auto 0 0;
+  height: calc(var(--space-8) * 3.5);
+  background: linear-gradient(to top, var(--color-background), transparent);
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .header {
+    padding-block: calc(var(--space-8) * 2) var(--space-8);
+  }
+
+  /* Extra specificity so this beats the composed heading4 class regardless of CSS order. */
+  .header .title {
+    font-size: var(--typography-heading6-font-size);
+    line-height: var(--typography-heading6-line-height);
+    letter-spacing: var(--typography-heading6-letter-spacing);
+  }
+}
