@@ -34,6 +34,20 @@ input {
   color: inherit;
 }
 
+/*
+ * iOS Safari zooms the page in when a field with text under 16px gets focus, and doesn't zoom
+ * back out afterwards. On touch screens fields are never smaller than 16px, so there's no zoom
+ * to undo (and pinch zoom stays available). The :not() parts only lift the specificity above
+ * the components' own one-class rules.
+ */
+@media (pointer: coarse) {
+  input:not([type='checkbox']):not([type='radio']),
+  select:not([multiple]),
+  textarea:not([hidden]) {
+    font-size: max(16px, 1em);
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--color-primary-focus);
   outline-offset: 2px;
